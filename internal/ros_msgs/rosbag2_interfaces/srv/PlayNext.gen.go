@@ -23,7 +23,7 @@ func init() {
 	typemap.RegisterService("rosbag2_interfaces/srv/PlayNext", PlayNextTypeSupport)
 }
 
-type _PlayNextTypeSupport struct{}
+type _PlayNextTypeSupport struct {}
 
 func (s _PlayNextTypeSupport) Request() types.MessageTypeSupport {
 	return PlayNext_RequestTypeSupport
@@ -89,7 +89,7 @@ type PlayNextService struct {
 func NewPlayNextService(node *rclgo.Node, name string, options *rclgo.ServiceOptions, handler PlayNextServiceRequestHandler) (*PlayNextService, error) {
 	h := func(rmw *rclgo.ServiceInfo, msg types.Message, rs rclgo.ServiceResponseSender) {
 		m := msg.(*PlayNext_Request)
-		responseSender := PlayNextServiceResponseSender{sender: rs}
+		responseSender := PlayNextServiceResponseSender{sender: rs} 
 		handler(rmw, m, responseSender)
 	}
 	service, err := node.NewService(name, PlayNextTypeSupport, options, h)

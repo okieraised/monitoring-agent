@@ -3,6 +3,10 @@ package constants
 import "time"
 
 const (
+	GraceWaitPeriod = 10 * time.Second
+)
+
+const (
 	MqttDefaultWriteTimeout         = 10 * time.Second
 	MqttDefaultKeepAlive            = 30 * time.Second
 	MqttDefaultPingTimeout          = 5 * time.Second

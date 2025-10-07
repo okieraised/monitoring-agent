@@ -23,7 +23,7 @@ func init() {
 	typemap.RegisterService("rosbag2_interfaces/srv/Pause", PauseTypeSupport)
 }
 
-type _PauseTypeSupport struct{}
+type _PauseTypeSupport struct {}
 
 func (s _PauseTypeSupport) Request() types.MessageTypeSupport {
 	return Pause_RequestTypeSupport
@@ -89,7 +89,7 @@ type PauseService struct {
 func NewPauseService(node *rclgo.Node, name string, options *rclgo.ServiceOptions, handler PauseServiceRequestHandler) (*PauseService, error) {
 	h := func(rmw *rclgo.ServiceInfo, msg types.Message, rs rclgo.ServiceResponseSender) {
 		m := msg.(*Pause_Request)
-		responseSender := PauseServiceResponseSender{sender: rs}
+		responseSender := PauseServiceResponseSender{sender: rs} 
 		handler(rmw, m, responseSender)
 	}
 	service, err := node.NewService(name, PauseTypeSupport, options, h)

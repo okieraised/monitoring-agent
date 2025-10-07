@@ -23,7 +23,7 @@ func init() {
 	typemap.RegisterService("lifecycle_msgs/srv/GetAvailableTransitions", GetAvailableTransitionsTypeSupport)
 }
 
-type _GetAvailableTransitionsTypeSupport struct{}
+type _GetAvailableTransitionsTypeSupport struct {}
 
 func (s _GetAvailableTransitionsTypeSupport) Request() types.MessageTypeSupport {
 	return GetAvailableTransitions_RequestTypeSupport
@@ -89,7 +89,7 @@ type GetAvailableTransitionsService struct {
 func NewGetAvailableTransitionsService(node *rclgo.Node, name string, options *rclgo.ServiceOptions, handler GetAvailableTransitionsServiceRequestHandler) (*GetAvailableTransitionsService, error) {
 	h := func(rmw *rclgo.ServiceInfo, msg types.Message, rs rclgo.ServiceResponseSender) {
 		m := msg.(*GetAvailableTransitions_Request)
-		responseSender := GetAvailableTransitionsServiceResponseSender{sender: rs}
+		responseSender := GetAvailableTransitionsServiceResponseSender{sender: rs} 
 		handler(rmw, m, responseSender)
 	}
 	service, err := node.NewService(name, GetAvailableTransitionsTypeSupport, options, h)

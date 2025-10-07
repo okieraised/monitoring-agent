@@ -23,7 +23,7 @@ func init() {
 	typemap.RegisterService("composition_interfaces/srv/LoadNode", LoadNodeTypeSupport)
 }
 
-type _LoadNodeTypeSupport struct{}
+type _LoadNodeTypeSupport struct {}
 
 func (s _LoadNodeTypeSupport) Request() types.MessageTypeSupport {
 	return LoadNode_RequestTypeSupport
@@ -89,7 +89,7 @@ type LoadNodeService struct {
 func NewLoadNodeService(node *rclgo.Node, name string, options *rclgo.ServiceOptions, handler LoadNodeServiceRequestHandler) (*LoadNodeService, error) {
 	h := func(rmw *rclgo.ServiceInfo, msg types.Message, rs rclgo.ServiceResponseSender) {
 		m := msg.(*LoadNode_Request)
-		responseSender := LoadNodeServiceResponseSender{sender: rs}
+		responseSender := LoadNodeServiceResponseSender{sender: rs} 
 		handler(rmw, m, responseSender)
 	}
 	service, err := node.NewService(name, LoadNodeTypeSupport, options, h)

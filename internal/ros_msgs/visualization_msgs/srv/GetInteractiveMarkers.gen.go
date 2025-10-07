@@ -23,7 +23,7 @@ func init() {
 	typemap.RegisterService("visualization_msgs/srv/GetInteractiveMarkers", GetInteractiveMarkersTypeSupport)
 }
 
-type _GetInteractiveMarkersTypeSupport struct{}
+type _GetInteractiveMarkersTypeSupport struct {}
 
 func (s _GetInteractiveMarkersTypeSupport) Request() types.MessageTypeSupport {
 	return GetInteractiveMarkers_RequestTypeSupport
@@ -89,7 +89,7 @@ type GetInteractiveMarkersService struct {
 func NewGetInteractiveMarkersService(node *rclgo.Node, name string, options *rclgo.ServiceOptions, handler GetInteractiveMarkersServiceRequestHandler) (*GetInteractiveMarkersService, error) {
 	h := func(rmw *rclgo.ServiceInfo, msg types.Message, rs rclgo.ServiceResponseSender) {
 		m := msg.(*GetInteractiveMarkers_Request)
-		responseSender := GetInteractiveMarkersServiceResponseSender{sender: rs}
+		responseSender := GetInteractiveMarkersServiceResponseSender{sender: rs} 
 		handler(rmw, m, responseSender)
 	}
 	service, err := node.NewService(name, GetInteractiveMarkersTypeSupport, options, h)

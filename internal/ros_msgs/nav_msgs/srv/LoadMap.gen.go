@@ -23,7 +23,7 @@ func init() {
 	typemap.RegisterService("nav_msgs/srv/LoadMap", LoadMapTypeSupport)
 }
 
-type _LoadMapTypeSupport struct{}
+type _LoadMapTypeSupport struct {}
 
 func (s _LoadMapTypeSupport) Request() types.MessageTypeSupport {
 	return LoadMap_RequestTypeSupport
@@ -89,7 +89,7 @@ type LoadMapService struct {
 func NewLoadMapService(node *rclgo.Node, name string, options *rclgo.ServiceOptions, handler LoadMapServiceRequestHandler) (*LoadMapService, error) {
 	h := func(rmw *rclgo.ServiceInfo, msg types.Message, rs rclgo.ServiceResponseSender) {
 		m := msg.(*LoadMap_Request)
-		responseSender := LoadMapServiceResponseSender{sender: rs}
+		responseSender := LoadMapServiceResponseSender{sender: rs} 
 		handler(rmw, m, responseSender)
 	}
 	service, err := node.NewService(name, LoadMapTypeSupport, options, h)

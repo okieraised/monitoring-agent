@@ -23,7 +23,7 @@ func init() {
 	typemap.RegisterService("nav_msgs/srv/GetPlan", GetPlanTypeSupport)
 }
 
-type _GetPlanTypeSupport struct{}
+type _GetPlanTypeSupport struct {}
 
 func (s _GetPlanTypeSupport) Request() types.MessageTypeSupport {
 	return GetPlan_RequestTypeSupport
@@ -89,7 +89,7 @@ type GetPlanService struct {
 func NewGetPlanService(node *rclgo.Node, name string, options *rclgo.ServiceOptions, handler GetPlanServiceRequestHandler) (*GetPlanService, error) {
 	h := func(rmw *rclgo.ServiceInfo, msg types.Message, rs rclgo.ServiceResponseSender) {
 		m := msg.(*GetPlan_Request)
-		responseSender := GetPlanServiceResponseSender{sender: rs}
+		responseSender := GetPlanServiceResponseSender{sender: rs} 
 		handler(rmw, m, responseSender)
 	}
 	service, err := node.NewService(name, GetPlanTypeSupport, options, h)

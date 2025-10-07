@@ -23,7 +23,7 @@ func init() {
 	typemap.RegisterService("composition_interfaces/srv/UnloadNode", UnloadNodeTypeSupport)
 }
 
-type _UnloadNodeTypeSupport struct{}
+type _UnloadNodeTypeSupport struct {}
 
 func (s _UnloadNodeTypeSupport) Request() types.MessageTypeSupport {
 	return UnloadNode_RequestTypeSupport
@@ -89,7 +89,7 @@ type UnloadNodeService struct {
 func NewUnloadNodeService(node *rclgo.Node, name string, options *rclgo.ServiceOptions, handler UnloadNodeServiceRequestHandler) (*UnloadNodeService, error) {
 	h := func(rmw *rclgo.ServiceInfo, msg types.Message, rs rclgo.ServiceResponseSender) {
 		m := msg.(*UnloadNode_Request)
-		responseSender := UnloadNodeServiceResponseSender{sender: rs}
+		responseSender := UnloadNodeServiceResponseSender{sender: rs} 
 		handler(rmw, m, responseSender)
 	}
 	service, err := node.NewService(name, UnloadNodeTypeSupport, options, h)

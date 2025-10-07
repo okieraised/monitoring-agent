@@ -23,7 +23,7 @@ func init() {
 	typemap.RegisterService("rosbag2_interfaces/srv/Resume", ResumeTypeSupport)
 }
 
-type _ResumeTypeSupport struct{}
+type _ResumeTypeSupport struct {}
 
 func (s _ResumeTypeSupport) Request() types.MessageTypeSupport {
 	return Resume_RequestTypeSupport
@@ -89,7 +89,7 @@ type ResumeService struct {
 func NewResumeService(node *rclgo.Node, name string, options *rclgo.ServiceOptions, handler ResumeServiceRequestHandler) (*ResumeService, error) {
 	h := func(rmw *rclgo.ServiceInfo, msg types.Message, rs rclgo.ServiceResponseSender) {
 		m := msg.(*Resume_Request)
-		responseSender := ResumeServiceResponseSender{sender: rs}
+		responseSender := ResumeServiceResponseSender{sender: rs} 
 		handler(rmw, m, responseSender)
 	}
 	service, err := node.NewService(name, ResumeTypeSupport, options, h)

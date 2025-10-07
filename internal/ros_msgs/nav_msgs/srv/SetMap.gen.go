@@ -23,7 +23,7 @@ func init() {
 	typemap.RegisterService("nav_msgs/srv/SetMap", SetMapTypeSupport)
 }
 
-type _SetMapTypeSupport struct{}
+type _SetMapTypeSupport struct {}
 
 func (s _SetMapTypeSupport) Request() types.MessageTypeSupport {
 	return SetMap_RequestTypeSupport
@@ -89,7 +89,7 @@ type SetMapService struct {
 func NewSetMapService(node *rclgo.Node, name string, options *rclgo.ServiceOptions, handler SetMapServiceRequestHandler) (*SetMapService, error) {
 	h := func(rmw *rclgo.ServiceInfo, msg types.Message, rs rclgo.ServiceResponseSender) {
 		m := msg.(*SetMap_Request)
-		responseSender := SetMapServiceResponseSender{sender: rs}
+		responseSender := SetMapServiceResponseSender{sender: rs} 
 		handler(rmw, m, responseSender)
 	}
 	service, err := node.NewService(name, SetMapTypeSupport, options, h)

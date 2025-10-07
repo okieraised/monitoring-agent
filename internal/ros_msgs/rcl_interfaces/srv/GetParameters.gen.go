@@ -23,7 +23,7 @@ func init() {
 	typemap.RegisterService("rcl_interfaces/srv/GetParameters", GetParametersTypeSupport)
 }
 
-type _GetParametersTypeSupport struct{}
+type _GetParametersTypeSupport struct {}
 
 func (s _GetParametersTypeSupport) Request() types.MessageTypeSupport {
 	return GetParameters_RequestTypeSupport
@@ -89,7 +89,7 @@ type GetParametersService struct {
 func NewGetParametersService(node *rclgo.Node, name string, options *rclgo.ServiceOptions, handler GetParametersServiceRequestHandler) (*GetParametersService, error) {
 	h := func(rmw *rclgo.ServiceInfo, msg types.Message, rs rclgo.ServiceResponseSender) {
 		m := msg.(*GetParameters_Request)
-		responseSender := GetParametersServiceResponseSender{sender: rs}
+		responseSender := GetParametersServiceResponseSender{sender: rs} 
 		handler(rmw, m, responseSender)
 	}
 	service, err := node.NewService(name, GetParametersTypeSupport, options, h)

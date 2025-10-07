@@ -23,7 +23,7 @@ func init() {
 	typemap.RegisterService("std_srvs/srv/SetBool", SetBoolTypeSupport)
 }
 
-type _SetBoolTypeSupport struct{}
+type _SetBoolTypeSupport struct {}
 
 func (s _SetBoolTypeSupport) Request() types.MessageTypeSupport {
 	return SetBool_RequestTypeSupport
@@ -89,7 +89,7 @@ type SetBoolService struct {
 func NewSetBoolService(node *rclgo.Node, name string, options *rclgo.ServiceOptions, handler SetBoolServiceRequestHandler) (*SetBoolService, error) {
 	h := func(rmw *rclgo.ServiceInfo, msg types.Message, rs rclgo.ServiceResponseSender) {
 		m := msg.(*SetBool_Request)
-		responseSender := SetBoolServiceResponseSender{sender: rs}
+		responseSender := SetBoolServiceResponseSender{sender: rs} 
 		handler(rmw, m, responseSender)
 	}
 	service, err := node.NewService(name, SetBoolTypeSupport, options, h)

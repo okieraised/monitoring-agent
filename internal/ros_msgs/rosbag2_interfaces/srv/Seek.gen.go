@@ -23,7 +23,7 @@ func init() {
 	typemap.RegisterService("rosbag2_interfaces/srv/Seek", SeekTypeSupport)
 }
 
-type _SeekTypeSupport struct{}
+type _SeekTypeSupport struct {}
 
 func (s _SeekTypeSupport) Request() types.MessageTypeSupport {
 	return Seek_RequestTypeSupport
@@ -89,7 +89,7 @@ type SeekService struct {
 func NewSeekService(node *rclgo.Node, name string, options *rclgo.ServiceOptions, handler SeekServiceRequestHandler) (*SeekService, error) {
 	h := func(rmw *rclgo.ServiceInfo, msg types.Message, rs rclgo.ServiceResponseSender) {
 		m := msg.(*Seek_Request)
-		responseSender := SeekServiceResponseSender{sender: rs}
+		responseSender := SeekServiceResponseSender{sender: rs} 
 		handler(rmw, m, responseSender)
 	}
 	service, err := node.NewService(name, SeekTypeSupport, options, h)

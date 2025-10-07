@@ -23,7 +23,7 @@ func init() {
 	typemap.RegisterService("rosbag2_interfaces/srv/IsPaused", IsPausedTypeSupport)
 }
 
-type _IsPausedTypeSupport struct{}
+type _IsPausedTypeSupport struct {}
 
 func (s _IsPausedTypeSupport) Request() types.MessageTypeSupport {
 	return IsPaused_RequestTypeSupport
@@ -89,7 +89,7 @@ type IsPausedService struct {
 func NewIsPausedService(node *rclgo.Node, name string, options *rclgo.ServiceOptions, handler IsPausedServiceRequestHandler) (*IsPausedService, error) {
 	h := func(rmw *rclgo.ServiceInfo, msg types.Message, rs rclgo.ServiceResponseSender) {
 		m := msg.(*IsPaused_Request)
-		responseSender := IsPausedServiceResponseSender{sender: rs}
+		responseSender := IsPausedServiceResponseSender{sender: rs} 
 		handler(rmw, m, responseSender)
 	}
 	service, err := node.NewService(name, IsPausedTypeSupport, options, h)

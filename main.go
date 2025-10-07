@@ -7,17 +7,24 @@ import (
 	"fmt"
 	"net/http"
 	"os"
+	"os/signal"
 	"strings"
 	"sync"
+	"syscall"
 	"time"
 
 	"github.com/joho/godotenv"
+	"github.com/okieraised/monitoring-agent/internal/agent/camera_streamer"
+	"github.com/okieraised/monitoring-agent/internal/agent/ros_topics_retriever"
 	"github.com/okieraised/monitoring-agent/internal/config"
+	"github.com/okieraised/monitoring-agent/internal/constants"
 	"github.com/okieraised/monitoring-agent/internal/infrastructure/local_cache"
 	"github.com/okieraised/monitoring-agent/internal/infrastructure/log"
 	"github.com/okieraised/monitoring-agent/internal/infrastructure/mqtt_client"
 	"github.com/okieraised/monitoring-agent/internal/infrastructure/s3_client"
+	"github.com/okieraised/rclgo/pkg/rclgo"
 	"github.com/spf13/viper"
+	"golang.org/x/sync/errgroup"
 )
 
 var once sync.Once
@@ -182,6 +189,74 @@ func init() {
 }
 
 func main() {
-	log.Default().Debug("Starting service")
+	sigCh := make(chan os.Signal, 2)
+	signal.Notify(sigCh, os.Interrupt, syscall.SIGTERM, syscall.SIGINT, syscall.SIGKILL)
+	defer signal.Stop(sigCh)
 
+	err := rclgo.Init(nil)
+	if err != nil {
+		log.Default().Fatal(fmt.Sprintf("Failed to initialize ROS client: %v", err))
+		return
+	}
+	defer func() {
+		cErr := rclgo.Deinit()
+		if cErr != nil && err == nil {
+			err = cErr
+		}
+	}()
+
+	parentCtx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+
+	g, ctx := errgroup.WithContext(parentCtx)
+
+	// Init ROS2 topic retriever
+	g.Go(func() error {
+		trErr := ros_topics_retriever.NewROS2TopicRetriever(ctx)
+		if trErr != nil {
+			return trErr
+		}
+		return ctx.Err()
+	})
+
+	// Init ROS2 camera streamer
+	g.Go(func() error {
+		twErr := camera_streamer.NewCameraStreamer(ctx)
+		if twErr != nil {
+			return twErr
+		}
+		return ctx.Err()
+	})
+
+	select {
+	case sig := <-sigCh:
+		log.Default().Debug(fmt.Sprintf("Signal received: %v", sig))
+		cancel()
+
+		done := make(chan error, 1)
+		go func() {
+			done <- g.Wait()
+		}()
+
+		select {
+		case err = <-done:
+			log.Default().Info("All tasks exited, shutting down agent")
+			return
+		case sig2 := <-sigCh:
+			log.Default().Debug(fmt.Sprintf("Second signal received: %v", sig2))
+			return
+		case <-time.After(constants.GraceWaitPeriod):
+			log.Default().Info("Grace period timed out, forcing exit")
+			return
+		}
+
+	case err = <-func() chan error {
+		ch := make(chan error, 1)
+		go func() {
+			ch <- g.Wait()
+		}()
+		return ch
+	}():
+		log.Default().Info(fmt.Sprintf("Workers finished early with error: %v", err))
+	}
 }

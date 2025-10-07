@@ -23,7 +23,7 @@ func init() {
 	typemap.RegisterService("rosbag2_interfaces/srv/SetRate", SetRateTypeSupport)
 }
 
-type _SetRateTypeSupport struct{}
+type _SetRateTypeSupport struct {}
 
 func (s _SetRateTypeSupport) Request() types.MessageTypeSupport {
 	return SetRate_RequestTypeSupport
@@ -89,7 +89,7 @@ type SetRateService struct {
 func NewSetRateService(node *rclgo.Node, name string, options *rclgo.ServiceOptions, handler SetRateServiceRequestHandler) (*SetRateService, error) {
 	h := func(rmw *rclgo.ServiceInfo, msg types.Message, rs rclgo.ServiceResponseSender) {
 		m := msg.(*SetRate_Request)
-		responseSender := SetRateServiceResponseSender{sender: rs}
+		responseSender := SetRateServiceResponseSender{sender: rs} 
 		handler(rmw, m, responseSender)
 	}
 	service, err := node.NewService(name, SetRateTypeSupport, options, h)

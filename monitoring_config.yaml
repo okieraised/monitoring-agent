@@ -1,0 +1,62 @@
+alerts:
+  - topic_name: low_battery
+    description: "Battery below 20% for 10s"
+    kind: threshold
+    when:
+      left: bms.battery_pct     # alias.signal or alias.field path
+      op: "<="                  # < | <= | > | >= | == | !=
+      right: 20
+    for: 10s
+    severity: warn              # info | warn | critical
+    notify: [slack_main]
+    cooldown: 5m                # optional override of default cooldown
+    once: false                 # if true, fire only first time until cleared
+
+  # Deadman (no data for N seconds)
+  - topic_name: tf_stale
+    description: "No TFs received"
+    kind: deadman
+    source: tf
+    no_data_for: 3s
+    severity: warn
+    notify: [slack_main]
+
+
+  - topic_name: battery_overtemp
+    description: "Average pack temperature > 60°C"
+    kind: threshold
+    when:
+      left: bms.temp_c
+      op: ">"
+      right: 60
+    for: 5s
+    severity: critical
+    notify: [webhook_ops]
+
+  # Composite rule: AND the states of two other alerts
+  - topic_name: composite_health
+    description: "Low SOC AND Overtemp"
+    kind: composite
+    all: [low_battery, battery_overtemp]  # all / any
+    severity: critical
+    notify: [webhook_ops]
+
+notifications:
+  # You can reference secrets via environment variables
+  slack_main:
+    kind: slack
+    webhook: ${SLACK_WEBHOOK_URL}
+
+  webhook_ops:
+    kind: http_post
+    url: https://ops.example.com/hooks/robot-alerts
+    headers:
+      Authorization: "Bearer ${OPS_TOKEN}"
+    template: |
+      {
+        "agent":"{{agent.id}}",
+        "alert":"{{alert.id}}",
+        "severity":"{{alert.severity}}",
+        "message":"{{alert.description}}",
+        "values": {{values_json}}
+      }

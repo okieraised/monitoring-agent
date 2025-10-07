@@ -23,7 +23,7 @@ func init() {
 	typemap.RegisterService("rosbag2_interfaces/srv/Burst", BurstTypeSupport)
 }
 
-type _BurstTypeSupport struct{}
+type _BurstTypeSupport struct {}
 
 func (s _BurstTypeSupport) Request() types.MessageTypeSupport {
 	return Burst_RequestTypeSupport
@@ -89,7 +89,7 @@ type BurstService struct {
 func NewBurstService(node *rclgo.Node, name string, options *rclgo.ServiceOptions, handler BurstServiceRequestHandler) (*BurstService, error) {
 	h := func(rmw *rclgo.ServiceInfo, msg types.Message, rs rclgo.ServiceResponseSender) {
 		m := msg.(*Burst_Request)
-		responseSender := BurstServiceResponseSender{sender: rs}
+		responseSender := BurstServiceResponseSender{sender: rs} 
 		handler(rmw, m, responseSender)
 	}
 	service, err := node.NewService(name, BurstTypeSupport, options, h)

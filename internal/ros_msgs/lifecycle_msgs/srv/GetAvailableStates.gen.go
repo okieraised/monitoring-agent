@@ -23,7 +23,7 @@ func init() {
 	typemap.RegisterService("lifecycle_msgs/srv/GetAvailableStates", GetAvailableStatesTypeSupport)
 }
 
-type _GetAvailableStatesTypeSupport struct{}
+type _GetAvailableStatesTypeSupport struct {}
 
 func (s _GetAvailableStatesTypeSupport) Request() types.MessageTypeSupport {
 	return GetAvailableStates_RequestTypeSupport
@@ -89,7 +89,7 @@ type GetAvailableStatesService struct {
 func NewGetAvailableStatesService(node *rclgo.Node, name string, options *rclgo.ServiceOptions, handler GetAvailableStatesServiceRequestHandler) (*GetAvailableStatesService, error) {
 	h := func(rmw *rclgo.ServiceInfo, msg types.Message, rs rclgo.ServiceResponseSender) {
 		m := msg.(*GetAvailableStates_Request)
-		responseSender := GetAvailableStatesServiceResponseSender{sender: rs}
+		responseSender := GetAvailableStatesServiceResponseSender{sender: rs} 
 		handler(rmw, m, responseSender)
 	}
 	service, err := node.NewService(name, GetAvailableStatesTypeSupport, options, h)

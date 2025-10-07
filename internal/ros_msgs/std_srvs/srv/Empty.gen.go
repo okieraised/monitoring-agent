@@ -23,7 +23,7 @@ func init() {
 	typemap.RegisterService("std_srvs/srv/Empty", EmptyTypeSupport)
 }
 
-type _EmptyTypeSupport struct{}
+type _EmptyTypeSupport struct {}
 
 func (s _EmptyTypeSupport) Request() types.MessageTypeSupport {
 	return Empty_RequestTypeSupport
@@ -89,7 +89,7 @@ type EmptyService struct {
 func NewEmptyService(node *rclgo.Node, name string, options *rclgo.ServiceOptions, handler EmptyServiceRequestHandler) (*EmptyService, error) {
 	h := func(rmw *rclgo.ServiceInfo, msg types.Message, rs rclgo.ServiceResponseSender) {
 		m := msg.(*Empty_Request)
-		responseSender := EmptyServiceResponseSender{sender: rs}
+		responseSender := EmptyServiceResponseSender{sender: rs} 
 		handler(rmw, m, responseSender)
 	}
 	service, err := node.NewService(name, EmptyTypeSupport, options, h)

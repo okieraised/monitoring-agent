@@ -23,7 +23,7 @@ func init() {
 	typemap.RegisterService("std_srvs/srv/Trigger", TriggerTypeSupport)
 }
 
-type _TriggerTypeSupport struct{}
+type _TriggerTypeSupport struct {}
 
 func (s _TriggerTypeSupport) Request() types.MessageTypeSupport {
 	return Trigger_RequestTypeSupport
@@ -89,7 +89,7 @@ type TriggerService struct {
 func NewTriggerService(node *rclgo.Node, name string, options *rclgo.ServiceOptions, handler TriggerServiceRequestHandler) (*TriggerService, error) {
 	h := func(rmw *rclgo.ServiceInfo, msg types.Message, rs rclgo.ServiceResponseSender) {
 		m := msg.(*Trigger_Request)
-		responseSender := TriggerServiceResponseSender{sender: rs}
+		responseSender := TriggerServiceResponseSender{sender: rs} 
 		handler(rmw, m, responseSender)
 	}
 	service, err := node.NewService(name, TriggerTypeSupport, options, h)

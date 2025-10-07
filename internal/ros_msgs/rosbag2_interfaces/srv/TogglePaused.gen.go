@@ -23,7 +23,7 @@ func init() {
 	typemap.RegisterService("rosbag2_interfaces/srv/TogglePaused", TogglePausedTypeSupport)
 }
 
-type _TogglePausedTypeSupport struct{}
+type _TogglePausedTypeSupport struct {}
 
 func (s _TogglePausedTypeSupport) Request() types.MessageTypeSupport {
 	return TogglePaused_RequestTypeSupport
@@ -89,7 +89,7 @@ type TogglePausedService struct {
 func NewTogglePausedService(node *rclgo.Node, name string, options *rclgo.ServiceOptions, handler TogglePausedServiceRequestHandler) (*TogglePausedService, error) {
 	h := func(rmw *rclgo.ServiceInfo, msg types.Message, rs rclgo.ServiceResponseSender) {
 		m := msg.(*TogglePaused_Request)
-		responseSender := TogglePausedServiceResponseSender{sender: rs}
+		responseSender := TogglePausedServiceResponseSender{sender: rs} 
 		handler(rmw, m, responseSender)
 	}
 	service, err := node.NewService(name, TogglePausedTypeSupport, options, h)

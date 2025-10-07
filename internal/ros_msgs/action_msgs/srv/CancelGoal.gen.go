@@ -23,7 +23,7 @@ func init() {
 	typemap.RegisterService("action_msgs/srv/CancelGoal", CancelGoalTypeSupport)
 }
 
-type _CancelGoalTypeSupport struct{}
+type _CancelGoalTypeSupport struct {}
 
 func (s _CancelGoalTypeSupport) Request() types.MessageTypeSupport {
 	return CancelGoal_RequestTypeSupport
@@ -89,7 +89,7 @@ type CancelGoalService struct {
 func NewCancelGoalService(node *rclgo.Node, name string, options *rclgo.ServiceOptions, handler CancelGoalServiceRequestHandler) (*CancelGoalService, error) {
 	h := func(rmw *rclgo.ServiceInfo, msg types.Message, rs rclgo.ServiceResponseSender) {
 		m := msg.(*CancelGoal_Request)
-		responseSender := CancelGoalServiceResponseSender{sender: rs}
+		responseSender := CancelGoalServiceResponseSender{sender: rs} 
 		handler(rmw, m, responseSender)
 	}
 	service, err := node.NewService(name, CancelGoalTypeSupport, options, h)

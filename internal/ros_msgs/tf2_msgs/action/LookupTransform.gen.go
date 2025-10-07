@@ -26,7 +26,7 @@ func init() {
 	typemap.RegisterAction("tf2_msgs/action/LookupTransform", LookupTransformTypeSupport)
 }
 
-type _LookupTransformTypeSupport struct{}
+type _LookupTransformTypeSupport struct {}
 
 func (s _LookupTransformTypeSupport) Goal() types.MessageTypeSupport {
 	return LookupTransform_GoalTypeSupport
@@ -102,7 +102,7 @@ func (s *LookupTransformFeedbackSender) Send(msg *LookupTransform_Feedback) erro
 	return s.sender.Send(msg)
 }
 
-type LookupTransformGoalHandle struct {
+type LookupTransformGoalHandle struct{
 	*rclgo.GoalHandle
 
 	Description *LookupTransform_Goal
@@ -149,7 +149,7 @@ func (a _LookupTransformAction) TypeSupport() types.ActionTypeSupport {
 	return LookupTransformTypeSupport
 }
 
-type LookupTransformServer struct {
+type LookupTransformServer struct{
 	*rclgo.ActionServer
 }
 
@@ -165,7 +165,7 @@ type LookupTransformFeedbackHandler func(context.Context, *LookupTransform_Feedb
 
 type LookupTransformStatusHandler func(context.Context, *action_msgs_msg.GoalStatus)
 
-type LookupTransformClient struct {
+type LookupTransformClient struct{
 	*rclgo.ActionClient
 }
 

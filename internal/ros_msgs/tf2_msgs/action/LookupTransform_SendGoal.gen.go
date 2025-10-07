@@ -23,7 +23,7 @@ func init() {
 	typemap.RegisterService("tf2_msgs/action/LookupTransform_SendGoal", LookupTransform_SendGoalTypeSupport)
 }
 
-type _LookupTransform_SendGoalTypeSupport struct{}
+type _LookupTransform_SendGoalTypeSupport struct {}
 
 func (s _LookupTransform_SendGoalTypeSupport) Request() types.MessageTypeSupport {
 	return LookupTransform_SendGoal_RequestTypeSupport
@@ -89,7 +89,7 @@ type LookupTransform_SendGoalService struct {
 func NewLookupTransform_SendGoalService(node *rclgo.Node, name string, options *rclgo.ServiceOptions, handler LookupTransform_SendGoalServiceRequestHandler) (*LookupTransform_SendGoalService, error) {
 	h := func(rmw *rclgo.ServiceInfo, msg types.Message, rs rclgo.ServiceResponseSender) {
 		m := msg.(*LookupTransform_SendGoal_Request)
-		responseSender := LookupTransform_SendGoalServiceResponseSender{sender: rs}
+		responseSender := LookupTransform_SendGoalServiceResponseSender{sender: rs} 
 		handler(rmw, m, responseSender)
 	}
 	service, err := node.NewService(name, LookupTransform_SendGoalTypeSupport, options, h)

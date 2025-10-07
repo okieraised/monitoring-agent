@@ -23,7 +23,7 @@ func init() {
 	typemap.RegisterService("tf2_msgs/action/LookupTransform_GetResult", LookupTransform_GetResultTypeSupport)
 }
 
-type _LookupTransform_GetResultTypeSupport struct{}
+type _LookupTransform_GetResultTypeSupport struct {}
 
 func (s _LookupTransform_GetResultTypeSupport) Request() types.MessageTypeSupport {
 	return LookupTransform_GetResult_RequestTypeSupport
@@ -89,7 +89,7 @@ type LookupTransform_GetResultService struct {
 func NewLookupTransform_GetResultService(node *rclgo.Node, name string, options *rclgo.ServiceOptions, handler LookupTransform_GetResultServiceRequestHandler) (*LookupTransform_GetResultService, error) {
 	h := func(rmw *rclgo.ServiceInfo, msg types.Message, rs rclgo.ServiceResponseSender) {
 		m := msg.(*LookupTransform_GetResult_Request)
-		responseSender := LookupTransform_GetResultServiceResponseSender{sender: rs}
+		responseSender := LookupTransform_GetResultServiceResponseSender{sender: rs} 
 		handler(rmw, m, responseSender)
 	}
 	service, err := node.NewService(name, LookupTransform_GetResultTypeSupport, options, h)

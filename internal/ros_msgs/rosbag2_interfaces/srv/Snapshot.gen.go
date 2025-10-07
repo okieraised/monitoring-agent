@@ -23,7 +23,7 @@ func init() {
 	typemap.RegisterService("rosbag2_interfaces/srv/Snapshot", SnapshotTypeSupport)
 }
 
-type _SnapshotTypeSupport struct{}
+type _SnapshotTypeSupport struct {}
 
 func (s _SnapshotTypeSupport) Request() types.MessageTypeSupport {
 	return Snapshot_RequestTypeSupport
@@ -89,7 +89,7 @@ type SnapshotService struct {
 func NewSnapshotService(node *rclgo.Node, name string, options *rclgo.ServiceOptions, handler SnapshotServiceRequestHandler) (*SnapshotService, error) {
 	h := func(rmw *rclgo.ServiceInfo, msg types.Message, rs rclgo.ServiceResponseSender) {
 		m := msg.(*Snapshot_Request)
-		responseSender := SnapshotServiceResponseSender{sender: rs}
+		responseSender := SnapshotServiceResponseSender{sender: rs} 
 		handler(rmw, m, responseSender)
 	}
 	service, err := node.NewService(name, SnapshotTypeSupport, options, h)

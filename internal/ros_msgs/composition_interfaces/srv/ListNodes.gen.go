@@ -23,7 +23,7 @@ func init() {
 	typemap.RegisterService("composition_interfaces/srv/ListNodes", ListNodesTypeSupport)
 }
 
-type _ListNodesTypeSupport struct{}
+type _ListNodesTypeSupport struct {}
 
 func (s _ListNodesTypeSupport) Request() types.MessageTypeSupport {
 	return ListNodes_RequestTypeSupport
@@ -89,7 +89,7 @@ type ListNodesService struct {
 func NewListNodesService(node *rclgo.Node, name string, options *rclgo.ServiceOptions, handler ListNodesServiceRequestHandler) (*ListNodesService, error) {
 	h := func(rmw *rclgo.ServiceInfo, msg types.Message, rs rclgo.ServiceResponseSender) {
 		m := msg.(*ListNodes_Request)
-		responseSender := ListNodesServiceResponseSender{sender: rs}
+		responseSender := ListNodesServiceResponseSender{sender: rs} 
 		handler(rmw, m, responseSender)
 	}
 	service, err := node.NewService(name, ListNodesTypeSupport, options, h)

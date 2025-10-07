@@ -23,7 +23,7 @@ func init() {
 	typemap.RegisterService("diagnostic_msgs/srv/AddDiagnostics", AddDiagnosticsTypeSupport)
 }
 
-type _AddDiagnosticsTypeSupport struct{}
+type _AddDiagnosticsTypeSupport struct {}
 
 func (s _AddDiagnosticsTypeSupport) Request() types.MessageTypeSupport {
 	return AddDiagnostics_RequestTypeSupport
@@ -89,7 +89,7 @@ type AddDiagnosticsService struct {
 func NewAddDiagnosticsService(node *rclgo.Node, name string, options *rclgo.ServiceOptions, handler AddDiagnosticsServiceRequestHandler) (*AddDiagnosticsService, error) {
 	h := func(rmw *rclgo.ServiceInfo, msg types.Message, rs rclgo.ServiceResponseSender) {
 		m := msg.(*AddDiagnostics_Request)
-		responseSender := AddDiagnosticsServiceResponseSender{sender: rs}
+		responseSender := AddDiagnosticsServiceResponseSender{sender: rs} 
 		handler(rmw, m, responseSender)
 	}
 	service, err := node.NewService(name, AddDiagnosticsTypeSupport, options, h)

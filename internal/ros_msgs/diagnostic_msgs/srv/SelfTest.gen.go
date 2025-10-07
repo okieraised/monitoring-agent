@@ -23,7 +23,7 @@ func init() {
 	typemap.RegisterService("diagnostic_msgs/srv/SelfTest", SelfTestTypeSupport)
 }
 
-type _SelfTestTypeSupport struct{}
+type _SelfTestTypeSupport struct {}
 
 func (s _SelfTestTypeSupport) Request() types.MessageTypeSupport {
 	return SelfTest_RequestTypeSupport
@@ -89,7 +89,7 @@ type SelfTestService struct {
 func NewSelfTestService(node *rclgo.Node, name string, options *rclgo.ServiceOptions, handler SelfTestServiceRequestHandler) (*SelfTestService, error) {
 	h := func(rmw *rclgo.ServiceInfo, msg types.Message, rs rclgo.ServiceResponseSender) {
 		m := msg.(*SelfTest_Request)
-		responseSender := SelfTestServiceResponseSender{sender: rs}
+		responseSender := SelfTestServiceResponseSender{sender: rs} 
 		handler(rmw, m, responseSender)
 	}
 	service, err := node.NewService(name, SelfTestTypeSupport, options, h)

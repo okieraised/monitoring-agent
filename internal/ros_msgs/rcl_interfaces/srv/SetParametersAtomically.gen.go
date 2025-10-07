@@ -23,7 +23,7 @@ func init() {
 	typemap.RegisterService("rcl_interfaces/srv/SetParametersAtomically", SetParametersAtomicallyTypeSupport)
 }
 
-type _SetParametersAtomicallyTypeSupport struct{}
+type _SetParametersAtomicallyTypeSupport struct {}
 
 func (s _SetParametersAtomicallyTypeSupport) Request() types.MessageTypeSupport {
 	return SetParametersAtomically_RequestTypeSupport
@@ -89,7 +89,7 @@ type SetParametersAtomicallyService struct {
 func NewSetParametersAtomicallyService(node *rclgo.Node, name string, options *rclgo.ServiceOptions, handler SetParametersAtomicallyServiceRequestHandler) (*SetParametersAtomicallyService, error) {
 	h := func(rmw *rclgo.ServiceInfo, msg types.Message, rs rclgo.ServiceResponseSender) {
 		m := msg.(*SetParametersAtomically_Request)
-		responseSender := SetParametersAtomicallyServiceResponseSender{sender: rs}
+		responseSender := SetParametersAtomicallyServiceResponseSender{sender: rs} 
 		handler(rmw, m, responseSender)
 	}
 	service, err := node.NewService(name, SetParametersAtomicallyTypeSupport, options, h)
