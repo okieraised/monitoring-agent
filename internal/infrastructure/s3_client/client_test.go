@@ -16,7 +16,7 @@ func TestInit(t *testing.T) {
 	err := NewS3Client(
 		context.Background(),
 		WithRegion("us-east-1"),
-		WithEndpoint("https://s3.dataloop.io", true),
+		WithEndpoint("http:127.0.0.1:9000", true),
 		WithStaticCredentials("admin", "123456aA@", ""),
 		WithRetry(5, 30*time.Second),
 		WithHTTPClient(&http.Client{

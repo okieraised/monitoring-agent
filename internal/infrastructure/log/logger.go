@@ -23,7 +23,7 @@ var (
 )
 
 func logLevel() zap.AtomicLevel {
-	switch viper.GetString(config.LogLevel) {
+	switch viper.GetString(config.AgentLogLevel) {
 	case "debug":
 		return zap.NewAtomicLevelAt(zap.DebugLevel)
 	case "info":

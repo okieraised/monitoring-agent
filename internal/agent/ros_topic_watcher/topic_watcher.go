@@ -11,8 +11,7 @@ import (
 	"github.com/okieraised/monitoring-agent/internal/constants"
 	"github.com/okieraised/monitoring-agent/internal/infrastructure/log"
 	sensor_msgs_msg "github.com/okieraised/monitoring-agent/internal/ros_msgs/sensor_msgs/msg"
-	"github.com/okieraised/rclgo/pkg/rclgo"
-	"github.com/okieraised/rclgo/pkg/rclgo/types"
+	"github.com/okieraised/rclgo/humble"
 )
 
 var topicsToWatch = []string{
@@ -23,12 +22,12 @@ var topicsToWatch = []string{
 func NewROS2TopicWatcher(ctx context.Context) error {
 	log.Default().Info("Starting ROS2 topic watcher node")
 
-	node, err := rclgo.NewNode(constants.NodeNameTopicWatcher, "")
+	node, err := humble.NewNode(constants.NodeNameTopicWatcher, "")
 	if err != nil {
 		log.Default().Error(fmt.Sprintf("Failed to create ROS2 topic watcher node: %v", err))
 		return err
 	}
-	defer func(node *rclgo.Node) {
+	defer func(node *humble.Node) {
 		cErr := node.Close()
 		if cErr != nil && err == nil {
 			err = cErr
@@ -57,7 +56,7 @@ func NewROS2TopicWatcher(ctx context.Context) error {
 		pkg, msg := parts[0], parts[len(parts)-1]
 		log.Default().Info(fmt.Sprintf("topic package: %s, message type: %s", pkg, msg))
 
-		typeSupport, cErr := rclgo.LoadDynamicMessageTypeSupport(pkg, msg)
+		typeSupport, cErr := humble.LoadDynamicMessageTypeSupport(pkg, msg)
 		if cErr != nil {
 			wErr := fmt.Errorf("failed to load dynamic message type support for topic [%s]: %v", topic, cErr)
 			log.Default().Error(wErr.Error())
@@ -74,7 +73,7 @@ func NewROS2TopicWatcher(ctx context.Context) error {
 	return nil
 }
 
-func topicWatcherHandler(ctx context.Context, wg *sync.WaitGroup, node *rclgo.Node, typeSupport types.MessageTypeSupport, topic string, subHandler func(s *rclgo.Subscription)) {
+func topicWatcherHandler(ctx context.Context, wg *sync.WaitGroup, node *humble.Node, typeSupport humble.MessageTypeSupport, topic string, subHandler func(s *humble.Subscription)) {
 	defer wg.Done()
 	log.Default().Info(fmt.Sprintf("Started subscribing to topic [%s]", topic))
 
@@ -83,20 +82,20 @@ func topicWatcherHandler(ctx context.Context, wg *sync.WaitGroup, node *rclgo.No
 		log.Default().Error(fmt.Errorf("failed to create subscription: %v", err).Error())
 		return
 	}
-	defer func(sub *rclgo.Subscription) {
+	defer func(sub *humble.Subscription) {
 		cErr := sub.Close()
 		if cErr != nil && err == nil {
 			err = cErr
 		}
 	}(sub)
 
-	ws, err := rclgo.NewWaitSet()
+	ws, err := humble.NewWaitSet()
 	if err != nil {
 		wErr := fmt.Errorf("failed to create new waitset: %v", err)
 		log.Default().Error(wErr.Error())
 		return
 	}
-	defer func(ws *rclgo.WaitSet) {
+	defer func(ws *humble.WaitSet) {
 		cErr := ws.Close()
 		if cErr != nil && err == nil {
 			err = cErr
@@ -110,7 +109,7 @@ func topicWatcherHandler(ctx context.Context, wg *sync.WaitGroup, node *rclgo.No
 	}
 }
 
-func matchTopicMessageType(msgType string) func(s *rclgo.Subscription) {
+func matchTopicMessageType(msgType string) func(s *humble.Subscription) {
 	switch msgType {
 	case "sensor_msgs/msg/CompressedImage":
 		return compressedImageHandler
@@ -121,14 +120,14 @@ func matchTopicMessageType(msgType string) func(s *rclgo.Subscription) {
 	return nil
 }
 
-var compressedImageHandler = func(s *rclgo.Subscription) {
+var compressedImageHandler = func(s *humble.Subscription) {
 	raw, _, err := s.TakeSerializedMessage()
 	if err != nil {
 		log.Default().Error(fmt.Sprintf("Failed to take serialized message: %v", err))
 		return
 	}
 
-	msg, err := rclgo.Deserialize(raw, sensor_msgs_msg.CompressedImageTypeSupport)
+	msg, err := humble.Deserialize(raw, sensor_msgs_msg.CompressedImageTypeSupport)
 	if err != nil {
 		log.Default().Error(fmt.Sprintf("Failed to deserialize message: %v", err))
 	}
@@ -136,11 +135,3 @@ var compressedImageHandler = func(s *rclgo.Subscription) {
 
 	fmt.Println(deserialized.Format)
 }
-
-//var float64MultiArrayHandler = func(s *rclgo.Subscription) {
-//	raw, _, err := s.TakeSerializedMessage()
-//	if err != nil {
-//		log.Default().Error(fmt.Sprintf("Failed to take serialized message: %v", err))
-//	}
-//
-//}

@@ -14,17 +14,20 @@ import (
 	"time"
 
 	"github.com/joho/godotenv"
-	"github.com/okieraised/monitoring-agent/internal/agent/camera_streamer"
 	"github.com/okieraised/monitoring-agent/internal/agent/ros_topics_retriever"
+	"github.com/okieraised/monitoring-agent/internal/agent/webrtc_viewer"
 	"github.com/okieraised/monitoring-agent/internal/config"
 	"github.com/okieraised/monitoring-agent/internal/constants"
 	"github.com/okieraised/monitoring-agent/internal/infrastructure/local_cache"
 	"github.com/okieraised/monitoring-agent/internal/infrastructure/log"
 	"github.com/okieraised/monitoring-agent/internal/infrastructure/mqtt_client"
 	"github.com/okieraised/monitoring-agent/internal/infrastructure/s3_client"
-	"github.com/okieraised/rclgo/pkg/rclgo"
+	"github.com/okieraised/monitoring-agent/internal/server/grpc_server"
+	"github.com/okieraised/monitoring-agent/internal/server/monitoring"
+	"github.com/okieraised/rclgo/humble"
 	"github.com/spf13/viper"
 	"golang.org/x/sync/errgroup"
+	"google.golang.org/grpc"
 )
 
 var once sync.Once
@@ -193,13 +196,13 @@ func main() {
 	signal.Notify(sigCh, os.Interrupt, syscall.SIGTERM, syscall.SIGINT, syscall.SIGKILL)
 	defer signal.Stop(sigCh)
 
-	err := rclgo.Init(nil)
+	err := humble.Init(nil)
 	if err != nil {
 		log.Default().Fatal(fmt.Sprintf("Failed to initialize ROS client: %v", err))
 		return
 	}
 	defer func() {
-		cErr := rclgo.Deinit()
+		cErr := humble.Deinit()
 		if cErr != nil && err == nil {
 			err = cErr
 		}
@@ -210,6 +213,19 @@ func main() {
 
 	g, ctx := errgroup.WithContext(parentCtx)
 
+	cWebRTC, rtcErr := webrtc_viewer.NewWebRTCViewer(parentCtx)
+	if rtcErr != nil {
+		log.Default().Fatal(fmt.Sprintf("Failed to initialize new WebRTC service: %v", err))
+		return
+	}
+	defer cWebRTC.Close()
+
+	rtcErr = cWebRTC.Start()
+	if rtcErr != nil {
+		log.Default().Fatal(fmt.Sprintf("Failed to start ROS WebRTC: %v", err))
+		return
+	}
+
 	// Init ROS2 topic retriever
 	g.Go(func() error {
 		trErr := ros_topics_retriever.NewROS2TopicRetriever(ctx)
@@ -219,12 +235,26 @@ func main() {
 		return ctx.Err()
 	})
 
-	// Init ROS2 camera streamer
+	// Init GRPC server
 	g.Go(func() error {
-		twErr := camera_streamer.NewCameraStreamer(ctx)
-		if twErr != nil {
-			return twErr
+		gErr := grpc_server.NewGRPCServer(ctx, func(s *grpc.Server) {
+
+		})
+		if gErr != nil {
+			return gErr
 		}
+		return ctx.Err()
+	})
+
+	// Init profiling
+	g.Go(func() error {
+		if viper.GetBool(config.AgentEnableMonitoring) {
+			mErr := monitoring.NewMonitoringServer(ctx)
+			if mErr != nil {
+				return mErr
+			}
+		}
+
 		return ctx.Err()
 	})
 
@@ -257,6 +287,6 @@ func main() {
 		}()
 		return ch
 	}():
-		log.Default().Info(fmt.Sprintf("Workers finished early with error: %v", err))
+		log.Default().Info(fmt.Sprintf("Services finished early with error: %v", err))
 	}
 }

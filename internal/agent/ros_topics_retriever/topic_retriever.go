@@ -7,7 +7,7 @@ import (
 
 	"github.com/okieraised/monitoring-agent/internal/constants"
 	"github.com/okieraised/monitoring-agent/internal/infrastructure/log"
-	"github.com/okieraised/rclgo/pkg/rclgo"
+	"github.com/okieraised/rclgo/humble"
 )
 
 type Config struct {
@@ -38,13 +38,13 @@ func NewROS2TopicRetriever(ctx context.Context, optFns ...Option) error {
 		}
 	}
 
-	node, err := rclgo.NewNode(constants.NodeNameTopicRetriever, "")
+	node, err := humble.NewNode(constants.NodeNameTopicRetriever, "")
 	if err != nil {
 		wErr := fmt.Errorf("failed to create ROS2 topic retriever node: %v", err)
 		log.Default().Error(wErr.Error())
 		return wErr
 	}
-	defer func(node *rclgo.Node) {
+	defer func(node *humble.Node) {
 		cErr := node.Close()
 		if cErr != nil && err == nil {
 			err = cErr
